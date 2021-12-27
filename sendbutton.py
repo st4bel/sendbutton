@@ -85,7 +85,7 @@ def do_it(location):
 
 def find_button_on_screen():
     # type ether "attack" or "support"
-    location = pyautogui.locateCenterOnScreen(args.type + ".PNG")
+    location = pyautogui.locateCenterOnScreen(args.type + ".PNG", confidence = 0.9)
     if not location:
         # when starting the attack from the map, the button looks different
         location = pyautogui.locateCenterOnScreen(args.type + "_map.PNG")
