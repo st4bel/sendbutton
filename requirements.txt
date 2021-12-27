@@ -1,0 +1,4 @@
+tcp_latency==0.0.8
+PyAutoGUI==0.9.53
+ntplib==0.3.4
+python_dateutil==2.8.2
