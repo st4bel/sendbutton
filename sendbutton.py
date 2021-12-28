@@ -1,5 +1,5 @@
 '''
-Version 0.1.0
+Version 0.2.0
 Arguments: 
 "--time" 
     example: 2021-12-27T22:45:00.500
@@ -18,12 +18,13 @@ import time
 import os
 import argparse
 from tcp_latency import measure_latency
-
+import random
 
 parser = argparse.ArgumentParser(description='Python Script to press the send buttons in Tribalwars at a given time.')
 parser.add_argument("--time")
 parser.add_argument("--server", default = "de197")
 parser.add_argument("--type", default = "attack")
+parser.add_argument("--delay", default = 0)
 
 args = parser.parse_args()
 
@@ -31,8 +32,10 @@ args = parser.parse_args()
 domain = args.server + ".die-staemme.de"
 #departure_time = "2021-12-27T22:45:00.500"
 departure = dateutil.parser.parse(args.time)
+manualdelay = int(args.delay)
 
 print("Sending date: {0}".format(departure))
+print("Manual delay set to: {0} ms".format(manualdelay))
 
 def get_local_offset():
     try:
@@ -55,7 +58,7 @@ def wait_to_send():
     ping = get_ping(domain)
     print("Ping for {0}: {1} ms".format(domain, ping.total_seconds() * 1000))
     print("Waiting")
-    real_departure = departure - offset - ping
+    real_departure = departure - offset - ping - datetime.timedelta(milliseconds=abs(manualdelay)) * (-1 if manualdelay < 0 else 1)
 
     while real_departure - datetime.datetime.now() > datetime.timedelta(seconds=5):
         time_left = real_departure - datetime.datetime.now() - datetime.timedelta(
@@ -69,6 +72,7 @@ def wait_to_send():
     if not location:
         print("cant find a button")
         return
+    location = random_click_position(location)
 
     while real_departure - datetime.datetime.now() > datetime.timedelta(milliseconds=1):
         time_left = real_departure - datetime.datetime.now()
@@ -77,18 +81,21 @@ def wait_to_send():
         time.sleep((time_left / 2).total_seconds())
     do_it(location)
 
+def random_click_position(location):
+    h = int(random.random() * location.height) 
+    w = int(random.random() * location.width)
+    loc={"x":location.left + w, "y" :  location.top  + h}
+    return loc
+
 def do_it(location):
     print("click ...")
-    pyautogui.click(location)
+    pyautogui.click(location["x"], location["y"])
     return
 
 
 def find_button_on_screen():
     # type ether "attack" or "support"
-    location = pyautogui.locateCenterOnScreen(args.type + ".PNG", confidence = 0.9)
-    if not location:
-        # when starting the attack from the map, the button looks different
-        location = pyautogui.locateCenterOnScreen(args.type + "_map.PNG")
+    location = pyautogui.locateOnScreen(args.type + ".PNG", confidence = 0.9)
     return location
 
 
