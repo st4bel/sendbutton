@@ -8,6 +8,8 @@ Searches for the "Angreifen" button on your screen to press it at the stated tim
 You'll need Python 3.6+
 > pip install -r requirements.txt
 
+or start "install-requirements.bat" (on windows)
+
 # Simple Start
 
 > python .\sendbutton.py --time 2021-12-27T22:45:00.500
