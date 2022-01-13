@@ -1,6 +1,7 @@
 # sendbutton
 
 Simple Script to send timed attacks in die-staemme.de .
+Searches for the "Angreifen" button on your screen to press it at the stated time. Therefore your browser tab has to be visible (in the foreground). There is no other interaction with the browser other than a single click -> should be undetectable.
 
 # Installation
 
