@@ -12,7 +12,6 @@ Arguments:
 
 from pynput.keyboard import Key, Controller
 import time
-import datetime
 import pyautogui
 import argparse
 import random
@@ -20,6 +19,7 @@ import random
 parser = argparse.ArgumentParser(description='Python Script, welches den Prägen-Button im Adelshof periodisch drückt.')
 parser.add_argument("--delay", default = "60")
 parser.add_argument("--delay_range", default = "0.2")
+parser.add_argument("--delay_after_reload", default = "2")
 parser.add_argument("--add_button", default = "5")
 
 
@@ -27,11 +27,12 @@ args = parser.parse_args()
 
 delay_range = float(args.delay_range)
 delay = int(args.delay)
-DELAY_AFTER_RELOAD = 2
+delay_after_reload = int(args.delay_after_reload)
 
 def print_info():
     print('Python Script, welches den Prägen-Button im Adelshof periodisch drückt.')
-    print('Arguments:\n"--delay"\nin seconds\nexample: "--delay 120" (default 60)\n"--delay_range"\nsmaler than 1.0; range in which delay is randomised\nexample: "--delay_range 0.3" (default 0.2)\n"--add_button"\nexample: "--add_button 5"\n\n')
+    print('Arguments:\n"--delay"\nin seconds\nexample: "--delay 120" (default 60)\n"--delay_range"\nsmaler than 1.0; range in which delay is randomised\nexample: "--delay_range 0.3" (default 0.2)\n"--delay_after_reload"\nexample: "--delay_after_reload 5"\n"--add_button"\nexample: "--add_button 5"\n\n')
+    print("Stopp by pressing Ctrl + C")
     print('===========================\n\n')
 
 
@@ -61,7 +62,7 @@ def wait_and_reload(keyboard):
     time.sleep(random_delay(delay))
     keyboard.press(Key.f5)
     keyboard.release(Key.f5)
-    time.sleep(random_delay(DELAY_AFTER_RELOAD))
+    time.sleep(random_delay(delay_after_reload))
 
 def random_delay(base_delay):
     r = random.random()
